@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finanças</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+  <style>
+    .alertas {
+      min-width: 30vw;
+      position: absolute;
+      bottom: 0px;
+      right: 10px;
+    }
+
+
+    @media screen and (min-width: 668px) {
+
+      .table-overflow {
+        max-height: 350px;
+        overflow-y: auto;
+      }
+
+    }
+  </style>
+
+</head>
+
+<body class="bg-dark text-white m-0 p-0">
+
+  <nav class="navbar bg-secondary text-white">
+    <h4>Finanças</h4>
+    <span class="btn material-symbols-outlined" onclick="deslogar()">
+      logout
+    </span>
+  </nav>
+
+  <section class="d-flex justify-content-around m-4">
+
+    <div class="d-flex align-items-center">
+      <span onclick="adiantarPeriodo()" class="btn material-symbols-outlined">
+        arrow_back_ios
+      </span>
+      <h4 id="periodo" class="mt-1"></h4>
+      <span onclick="voltarPeriodo()" class="btn material-symbols-outlined">
+        arrow_forward_ios
+      </span>
+    </div>
+
+    </div>
+  </section>
+
+  <section id="valoresTotais" class="container font-weight-bold d-flex justify-content-around">
+    <!-- <div class="m-1 text-success">Receitas: R$1800,00</div>
+    <div class="m-1 text-danger">Despesas: R$ 1500,00</div>
+    <div class="m-1">Saldo: R$ 300,00</div> -->
+  </section>
+
+  <section class="my-5 d-md-flex justify-content-around">
+
+    <div class="container d-flex justify-content-around align-items-center">
+
+      <div id="chart_div"></div>
+
+    </div>
+
+    <div class="container">
+
+      <div class="table-overflow">
+        <table class="table table-hover table-sm table-responsive-sm table-striped table-dark text-center">
+          <thead id="cabecalhoTabela">
+            <tr>
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Local</th>
+              <th>Categoria</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody id="tabela">
+            <!-- <tr id="_id" class="text-success">
+              <td>08/10/22</td>
+              <td>Receita</td>
+              <td>Empresa</td>
+              <td>Salário</td>
+              <td style="white-space: nowrap">R$ 1.800</td>
+            </tr>
+            <tr class="text-danger">
+              <td>09/10/22</td>
+              <td>Despesa</td>
+              <td>Uber</td>
+              <td>Transporte</td>
+              <td style="white-space: nowrap">R$ 12,50</td> -->
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+
+
+  </section>
+
+  <section id="btnPrincipal" class="d-flex justify-content-between fixed-bottom mb-2">
+    <button class="btn btn-success p-1 ml-2" data-toggle="modal" data-target="#modalReceita">
+      Adicionar Receita
+    </button>
+    <button class="btn p-1 btn-danger mr-2" data-toggle="modal" data-target="#modalDespesa">
+      Adicionar Despesa
+    </button>
+  </section>
+
+
+  <div id="modalReceita" class="modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-success">
+        <div class="modal-header">
+          <h1>Receita:</h1>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span class="h1 text-white" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="formReceita" class="form">
+
+            <div class="form-group col-auto">
+              <label for="valorReceita">Valor</label>
+              <input class="form-control" id="valorReceita" type="number" placeholder="Ex: R$1200,00" min="0">
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="categoriaReceita">Categoria:</label>
+              <select class="form-control" name="categoriaReceita" id="categoriaReceita">
+                <option value="Salário">Salário</option>
+                <option value="Extra">Extra</option>
+              </select>
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="localReceita">Local</label>
+              <input class="form-control" id="localReceita" type="text">
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="dataReceita">Data:</label>
+              <input id="dataReceita" type="date" class="form-control">
+            </div>
+
+            <div id="btnAdicionarRceita" class="d-flex justify-content-center">
+              <button type="button" onclick="adicionarReceita()" class="btn btn-light text-success">Adicionar</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="containerErros">
+
+  </section>
+
+
+
+  <div id="modalDespesa" class="modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-danger">
+        <div class="modal-header">
+          <h1>Despesa:</h1>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span class="h1 text-white" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="formDespesa" class="form">
+
+            <div class="form-group col-auto">
+              <label for="valorDespesa">Valor</label>
+              <input class="form-control" id="valorDespesa" type="number" placeholder="Ex: R$1200,00">
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="categoriaDespesa">Categoria:</label>
+              <select class="form-control" name="categoriaDespesa" id="categoriaDespesa">
+                <option value="Moradia">Moradia</option>
+                <option value="Educação">Educação</option>
+                <option value="Alimentação">Alimentação</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Saúde">Saúde</option>
+                <option value="Lazer">Lazer</option>
+                <option value="Vestuário">Vestuário</option>
+                <option value="Lanches">Lanches</option>
+                <option value="Presentes">Presentes</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="localDespesa">Local</label>
+              <input class="form-control" id="localDespesa" type="text">
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="dataDespesa">Data:</label>
+              <input id="dataDespesa" type="date" class="form-control">
+            </div>
+
+            <div class="d-flex justify-content-center">
+              <button onclick="adicionarDespesa()" type="button" class="btn btn-light text-danger">Adicionar</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div id="modalEditar" class="modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h1>Editar:</h1>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span class="h1 text-white" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="formEditar" class="form">
+
+            <div class="form-group col-auto">
+              <label for="valorEditar">Valor</label>
+              <input class="form-control" id="valorEditar" type="number" min="0">
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="categoriaEditar">Categoria:</label>
+              <select class="form-control" name="categoriaEditar" id="categoriaEditar">
+              </select>
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="localEditar">Local</label>
+              <input class="form-control" id="localEditar" type="text">
+            </div>
+
+            <div class="form-group col-auto">
+              <label for="dataEditar">Data:</label>
+              <input id="dataEditar" type="date" class="form-control">
+            </div>
+
+            <div id="btnContainer" class="d-flex justify-content-center">
+              <!-- <button type="button" onclick="excluir()" class="btn btn-light text-danger mr-2">Excluir</button>
+              <button type="button" onclick="editar()" class="btn btn-light text-dark">Editar</button> -->
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="./sistema.js"></script>
+
+</body>
+
+</html>
